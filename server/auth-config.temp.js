@@ -1,6 +1,6 @@
 var GoodreadsStrategy = require('passport-goodreads').Strategy;
 var userCreator = require('./userCreator.js');
-var currentUser = require('../db/currentUser.js');
+var currentUser = require('./db/currentUser.js');
 
 module.exports.setup = function (passport, db){
 
@@ -13,6 +13,7 @@ module.exports.setup = function (passport, db){
     db.User.findAll({where: { goodreadsId: profile.id }}).then(function(user) {
       if (!user[0]) {
         userCreator(profile, function (newUser) {
+          currentUser.userData = newUser;
           return done(null, newUser);  
         });
       }
